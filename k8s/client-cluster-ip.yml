@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-cluster-ip
+spec:
+  type: ClusterIP
+  selector:
+  # corresponds to the label of each pod created by client-deployment
+  # (i.e. template.metadata.labels in ./client-deployment.yml)
+    component: frontend
+  ports:
+  - port: 3000 # what other pods use to access this ClusterIP
+    targetPort: 3000 # port on pod we are providing access to
+    # (i.e. spec.template.spec.containers[0].ports.containerPort
+    # in ./client-deployment.yml)

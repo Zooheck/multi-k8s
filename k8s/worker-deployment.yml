@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-deployment
+spec:
+  selector:
+    matchLabels:
+      component: worker
+  template:
+    metadata:
+      labels:
+        component: worker
+    spec:
+      containers:
+        - name: worker
+          image: dflack/multi-worker
+          env:
+            - name: REDIS_HOST
+              # name of redis cluster ip service
+              value: redis-cluster-ip
+            - name: REDIS_PORT
+              # matches opening port in redis cluster ip
+              value: '6379'

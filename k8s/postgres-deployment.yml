@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+spec:
+  selector:
+    matchLabels:
+      component: postgres
+  template:
+    metadata:
+      labels:
+        component: postgres
+    spec:
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: db-pvc
+      containers:
+        - name: postgres
+          image: postgres
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            # must match an entry in volumes (above)
+            - name: postgres-storage
+              # default postgres storage location
+              mountPath: /var/lib/postgresql/data
+              # specific to postgres
+              # any data stored in mountPath
+              # will be stored in a folder called
+              # postgres inside of the persistent
+              # volume
+
+              # very very specific to postgres,
+              # don't worry about this too much
+              subPath: postgres
+          env:
+            - name: POSTGRES_PASSWORD # must be called this per pg's docker image
+              valueFrom:
+                  secretKeyRef:
+                    name: pgpassword # comes from secret generation command
+                    key: PGPASSWORD

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce # Can be used by a single node (read & write)
+  resources:
+    requests:
+      # k8s must find storage instance w/ at least
+      # 2 gigs of storage (either statically or
+      # dynamically provisioned)
+      storage: 2Gi 
